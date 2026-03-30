@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boas-vindas</title>
+  <style>
+    :root{
+      --bg:#0b0d10;
+      --panel:#12161b;
+      --muted:#8a94a6;
+      --text:#e8edf5;
+      --line:#222933;
+      --accent:#5aa2ff;
+      --ok:#43c27a;
+      --warn:#f0b44c;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif}
+    .wrap{max-width:880px;margin:0 auto;padding:32px 20px 48px}
+    .hero{margin-bottom:22px}
+    h1{font-size:28px;line-height:1.15;margin:0 0 8px}
+    p{margin:0;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:22px}
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:16px;
+      min-height:148px;
+    }
+    .card h2{
+      margin:0 0 12px;
+      font-size:13px;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      color:var(--muted);
+      font-weight:600;
+    }
+    .list{display:grid;gap:8px}
+    .row{
+      display:grid;
+      grid-template-columns:120px 1fr;
+      gap:10px;
+      align-items:start;
+      border-top:1px solid rgba(255,255,255,.04);
+      padding-top:8px;
+    }
+    .row:first-child{border-top:0;padding-top:0}
+    .key{color:var(--muted)}
+    .val{
+      word-break:break-word;
+      color:var(--text);
+    }
+    .status{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--line);
+      color:var(--text);
+      margin-top:16px;
+      font-size:13px;
+    }
+    .dot{
+      width:8px;height:8px;border-radius:999px;background:var(--ok);
+      box-shadow:0 0 0 4px rgba(67,194,122,.12);
+    }
+    .offline .dot{background:#e06a6a;box-shadow:0 0 0 4px rgba(224,106,106,.12);}
+    .footer{
+      margin-top:16px;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .actions{
+      display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;
+    }
+    button{
+      appearance:none;border:1px solid var(--line);background:var(--panel);color:var(--text);
+      border-radius:12px;padding:10px 14px;font:inherit;cursor:pointer;
+    }
+    button:hover{border-color:#314156}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+    .small{font-size:12px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Boas-vindas</h1>
+      <p>Resumo rápido do navegador, dispositivo e rede disponível via JavaScript.</p>
+
+      <div id="netStatus" class="status">
+        <span class="dot"></span>
+        <span id="netStatusText">Verificando conexão…</span>
+      </div>
+
+      <div class="actions">
+        <button id="refreshBtn" type="button">Atualizar dados</button>
+        <button id="geoBtn" type="button">Solicitar geolocalização</button>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Navegador</h2>
+        <div class="list">
+          <div class="row"><div class="key">User-Agent</div><div class="val mono" id="ua">—</div></div>
+          <div class="row"><div class="key">Idioma</div><div class="val" id="language">—</div></div>
+          <div class="row"><div class="key">Plataforma</div><div class="val" id="platform">—</div></div>
+          <div class="row"><div class="key">Cookies</div><div class="val" id="cookies">—</div></div>
+          <div class="row"><div class="key">Do Not Track</div><div class="val" id="dnt">—</div></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Dispositivo</h2>
+        <div class="list">
+          <div class="row"><div class="key">Tela</div><div class="val" id="screen">—</div></div>
+          <div class="row"><div class="key">Viewport</div><div class="val" id="viewport">—</div></div>
+          <div class="row"><div class="key">CPU lógica</div><div class="val" id="cpu">—</div></div>
+          <div class="row"><div class="key">Memória</div><div class="val" id="memory">—</div></div>
+          <div class="row"><div class="key">Touch</div><div class="val" id="touch">—</div></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Rede</h2>
+        <div class="list">
+          <div class="row"><div class="key">IP público</div><div class="val" id="ip">Carregando…</div></div>
+          <div class="row"><div class="key">Latência</div><div class="val" id="latency">Medindo…</div></div>
+          <div class="row"><div class="key">Tipo de rede</div><div class="val" id="effectiveType">—</div></div>
+          <div class="row"><div class="key">RTT navegador</div><div class="val" id="rtt">—</div></div>
+          <div class="row"><div class="key">Downlink</div><div class="val" id="downlink">—</div></div>
+          <div class="row"><div class="key">Economia</div><div class="val" id="saveData">—</div></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Contexto</h2>
+        <div class="list">
+          <div class="row"><div class="key">URL atual</div><div class="val mono" id="url">—</div></div>
+          <div class="row"><div class="key">Origem</div><div class="val mono" id="origin">—</div></div>
+          <div class="row"><div class="key">Host</div><div class="val mono" id="host">—</div></div>
+          <div class="row"><div class="key">Referrer</div><div class="val mono" id="referrer">—</div></div>
+          <div class="row"><div class="key">DNS</div><div class="val" id="dns">Indisponível no browser</div></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Localização</h2>
+        <div class="list">
+          <div class="row"><div class="key">Coordenadas</div><div class="val" id="coords">Não solicitado</div></div>
+          <div class="row"><div class="key">Precisão</div><div class="val" id="accuracy">—</div></div>
+          <div class="row"><div class="key">Fuso</div><div class="val" id="timezone">—</div></div>
+          <div class="row"><div class="key">Horário local</div><div class="val" id="localTime">—</div></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Notas</h2>
+        <div class="list">
+          <div class="row"><div class="key">IP</div><div class="val small">Consultado via serviço externo.</div></div>
+          <div class="row"><div class="key">DNS</div><div class="val small">O navegador não expõe resolvedores DNS ao JavaScript.</div></div>
+          <div class="row"><div class="key">Latência</div><div class="val small">É uma estimativa por requisição HTTP, não um ping ICMP real.</div></div>
+        </div>
+      </article>
+    </section>
+
+    <div class="footer">
+      Página estática única. Sem dependências externas de UI.
+    </div>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    function setText(id, value) {
+      $(id).textContent = value ?? '—';
+    }
+
+    function updateStaticInfo() {
+      setText('ua', navigator.userAgent || '—');
+      setText('language', [navigator.language, ...(navigator.languages || [])].filter(Boolean).join(', ') || '—');
+      setText('platform', navigator.userAgentData?.platform || navigator.platform || '—');
+      setText('cookies', navigator.cookieEnabled ? 'Habilitados' : 'Desabilitados');
+      setText('dnt', navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack || 'Não informado');
+
+      setText('screen', `${screen.width} × ${screen.height} @ ${window.devicePixelRatio || 1}x`);
+      setText('viewport', `${window.innerWidth} × ${window.innerHeight}`);
+      setText('cpu', navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} threads` : 'Não disponível');
+      setText('memory', navigator.deviceMemory ? `${navigator.deviceMemory} GB (estimado)` : 'Não disponível');
+      setText('touch', navigator.maxTouchPoints ? `${navigator.maxTouchPoints} pontos` : 'Não');
+
+      setText('url', location.href);
+      setText('origin', location.origin);
+      setText('host', location.host);
+      setText('referrer', document.referrer || 'Direto / vazio');
+
+      setText('timezone', Intl.DateTimeFormat().resolvedOptions().timeZone || '—');
+      setText('localTime', new Date().toLocaleString());
+    }
+
+    function updateConnectionInfo() {
+      const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      setText('effectiveType', c?.effectiveType || 'Não disponível');
+      setText('rtt', typeof c?.rtt === 'number' ? `${c.rtt} ms` : 'Não disponível');
+      setText('downlink', typeof c?.downlink === 'number' ? `${c.downlink} Mb/s` : 'Não disponível');
+      setText('saveData', typeof c?.saveData === 'boolean' ? (c.saveData ? 'Ativado' : 'Desativado') : 'Não disponível');
+
+      const status = $('netStatus');
+      const text = $('netStatusText');
+      if (navigator.onLine) {
+        status.classList.remove('offline');
+        text.textContent = 'Conectado';
+      } else {
+        status.classList.add('offline');
+        text.textContent = 'Sem conexão';
+      }
+    }
+
+    async function measureLatency() {
+      const start = performance.now();
+      const target = `${location.pathname || '/'}?probe=${Date.now()}`;
+      try {
+        await fetch(target, {
+          method: 'GET',
+          cache: 'no-store',
+          headers: { 'x-probe': '1' }
+        });
+        const ms = Math.round(performance.now() - start);
+        setText('latency', `${ms} ms`);
+      } catch (err) {
+        setText('latency', 'Falhou ao medir');
+      }
+    }
+
+    async function fetchPublicIP() {
+      try {
+        const res = await fetch('https://api.ipify.org?format=json', { cache: 'no-store' });
+        const data = await res.json();
+        setText('ip', data.ip || 'Não disponível');
+      } catch (err) {
+        setText('ip', 'Não foi possível consultar');
+      }
+    }
+
+    function requestGeolocation() {
+      if (!('geolocation' in navigator)) {
+        setText('coords', 'Geolocalização não suportada');
+        setText('accuracy', '—');
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude, accuracy } = pos.coords;
+          setText('coords', `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`);
+          setText('accuracy', `${Math.round(accuracy)} m`);
+        },
+        (err) => {
+          setText('coords', `Negado / indisponível (${err.message})`);
+          setText('accuracy', '—');
+        },
+        { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 }
+      );
+    }
+
+    async function refreshAll() {
+      updateStaticInfo();
+      updateConnectionInfo();
+      await Promise.allSettled([measureLatency(), fetchPublicIP()]);
+      setText('localTime', new Date().toLocaleString());
+    }
+
+    $('refreshBtn').addEventListener('click', refreshAll);
+    $('geoBtn').addEventListener('click', requestGeolocation);
+    window.addEventListener('resize', updateStaticInfo);
+    window.addEventListener('online', updateConnectionInfo);
+    window.addEventListener('offline', updateConnectionInfo);
+
+    const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (c && typeof c.addEventListener === 'function') {
+      c.addEventListener('change', updateConnectionInfo);
+    }
+
+    refreshAll();
+    setInterval(() => {
+      setText('localTime', new Date().toLocaleString());
+    }, 1000);
+  </script>
+</body>
+</html>
